@@ -46,8 +46,13 @@ public class AddOutsourcedPartController {
         else{
         OutsourcedPartService repo=context.getBean(OutsourcedPartServiceImpl.class);
         OutsourcedPart op=repo.findById((int)part.getId());
-        if(op!=null)part.setProducts(op.getProducts());
+        System.out.println("** ** ** part "+op.getName()+" min="+op.getMin()+" max="+op.getMax()+" inv="+op.getInv());
+        //if (op.getInv()>op.getMax()){
+        //    op.setInv(op.getMax());
+        //}
             repo.save(part);
+        if(op!=null)part.setProducts(op.getProducts());
+        //repo.save(part);
         return "confirmationaddpart";}
     }
 

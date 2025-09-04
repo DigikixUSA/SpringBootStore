@@ -6,6 +6,7 @@ import com.example.demo.service.PartService;
 import com.example.demo.service.PartServiceImpl;
 import com.example.demo.service.ProductService;
 import com.example.demo.service.ProductServiceImpl;
+import com.example.demo.validators.ValidMinMax;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -80,8 +81,14 @@ public class AddProductController {
                 if(product.getInv()- product2.getInv()>0) {
                     for (Part p : product2.getParts()) {
                         int inv = p.getInv();
-                        p.setInv(inv - (product.getInv() - product2.getInv()));
-                        partService1.save(p);
+                        int inv2 = inv - (product.getInv() - product2.getInv());
+                        if (inv2 >= p.getMin() && inv2 <= p.getMax()) {
+                            p.setInv(inv2);
+                            partService1.save(p);
+                        }else {
+                            return "addproductoutofpart";
+                        }
+
                     }
                 }
             }

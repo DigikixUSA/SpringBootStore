@@ -13,7 +13,7 @@
 
 <!-- Add hidden form field to handle update -->
     <p><input type="hidden" th:field="*{id}"/></p>
-
+    <p th:if="${#fields.hasErrors()}" th:each="err : ${#fields.allErrors()}" th:text="${err}" class="error"/></p>
 <p><input type="text" th:field="*{name}" placeholder="Name" class="form-control mb-4 col-4"/></p>
 
 <p><input type="text" th:field="*{price}" placeholder= "Price" class="form-control mb-4 col-4"/></p>
@@ -22,9 +22,16 @@
 <p><input type="text" th:field="*{inv}" placeholder="Inventory" class="form-control mb-4 col-4"/></p>
     <p th:if="${#fields.hasErrors('inv')}" th:errors="*{inv}">Inventory Error</p>
 
+    <p><input type="text" th:field="*{max}" placeholder="Max Inventory" class="form-control mb-4 col-4"/></p>
+    <p th:if="${#fields.hasErrors('max')}" th:errors="*{max}">Max Inventory Error</p>
+
+    <p><input type="text" th:field="*{min}" placeholder="Min Inventory" class="form-control mb-4 col-4"/></p>
+    <p th:if="${#fields.hasErrors('min')}" th:errors="*{min}">Min Inventory Error</p>
+
     <p><input type="text" th:field="*{companyName}" placeholder="Company Name" class="form-control mb-4 col-4"/></p>
 
 <p><input type="submit" value="Submit" /></p>
+
 </form>
 <a href="http://localhost:8080/">Link
     to Main Screen</a>
