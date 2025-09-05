@@ -1,8 +1,10 @@
 package com.example.demo.bootstrap;
 
+import com.example.demo.domain.InhousePart;
 import com.example.demo.domain.OutsourcedPart;
 import com.example.demo.domain.Part;
 import com.example.demo.domain.Product;
+import com.example.demo.repositories.InhousePartRepository;
 import com.example.demo.repositories.OutsourcedPartRepository;
 import com.example.demo.repositories.PartRepository;
 import com.example.demo.repositories.ProductRepository;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,12 +31,13 @@ public class BootStrapData implements CommandLineRunner {
 
     private final PartRepository partRepository;
     private final ProductRepository productRepository;
-
+    private final InhousePartRepository inhousePartRepository;
     private final OutsourcedPartRepository outsourcedPartRepository;
 
-    public BootStrapData(PartRepository partRepository, ProductRepository productRepository, OutsourcedPartRepository outsourcedPartRepository) {
+    public BootStrapData(PartRepository partRepository, ProductRepository productRepository, InhousePartRepository inhousePartRepository, OutsourcedPartRepository outsourcedPartRepository) {
         this.partRepository = partRepository;
         this.productRepository = productRepository;
+        this.inhousePartRepository = inhousePartRepository;
         this.outsourcedPartRepository=outsourcedPartRepository;
     }
 
@@ -41,11 +45,13 @@ public class BootStrapData implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
 //only used for testing
-// partRepository.deleteAll();
+ partRepository.deleteAll();
         //check if starting from scratch, get the current quantity of ALL parts, only add if already 0
         List<Part> InStockParts=(List<Part>) partRepository.findAll();
         if (InStockParts.size()==0) {
             OutsourcedPart o = new OutsourcedPart();
+            InhousePart p = new InhousePart();
+
             o.setCompanyName("Summit Racing");//
             o.setName("Ignition Coil");//Ignition Coil
             o.setPrice(99.99);//50.0
@@ -82,22 +88,26 @@ public class BootStrapData implements CommandLineRunner {
             o.setId(104L);
             outsourcedPartRepository.save(o);
 
-            o.setCompanyName("ZZP");//
-            o.setName("Exhaust Manifold");//Exhaust Manifold
-            o.setPrice(99.99);//250.0
-            o.setMax(100);//20
-            o.setMin(5);//0
-            o.setInv(50);//5
-            o.setId(102L);
-            outsourcedPartRepository.save(o);
+            p.setPartId (50001);//
+            p.setName("Exhaust Manifold");//Exhaust Manifold
+            p.setPrice(99.99);//250.0
+            p.setMax(100);//20
+            p.setMin(5);//0
+            p.setInv(50);//5
+            p.setId(102L);
+            inhousePartRepository.save(p);
 
             List<OutsourcedPart> outsourcedParts = (List<OutsourcedPart>) outsourcedPartRepository.findAll();
             for (OutsourcedPart part : outsourcedParts) {
                 System.out.println(part.getName() + " " + part.getCompanyName()+ " min="+part.getMin()+" max="+part.getMax()+ " inv="+part.getInv()+" price="+part.getPrice());
             }
+            List<InhousePart> inhouseParts = (List<InhousePart>) inhousePartRepository.findAll();
+            for (InhousePart part : inhouseParts) {
+                System.out.println("In-house part: " + part.getName() + " " + part.getPartId()+ " min="+part.getMin()+" max="+part.getMax()+ " inv="+part.getInv()+" price="+part.getPrice());
+            }
         }
 //only used for testing
-// productRepository.deleteAll();
+ productRepository.deleteAll();
         //check if starting from scratch
         List<Product> InStockProducts=(List<Product>) productRepository.findAll();
         if (InStockProducts.size()==0) {
@@ -119,6 +129,6 @@ public class BootStrapData implements CommandLineRunner {
         System.out.println(productRepository.findAll());
         System.out.println("Number of Parts"+partRepository.count());
         System.out.println(partRepository.findAll());
-
+        System.out.println("Tip: Open your browser to localhost:8080");
     }
 }
